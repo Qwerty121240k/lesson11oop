@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
@@ -10,10 +10,16 @@ public class Enemy : MonoBehaviour
     private float lastHitTime = 0f;
     public float hitCooldown = 1f;
 
+    [SerializeField] private HealthBar healthBar;  // 👈 Reference to health bar UI
+
+
     void Start()
     {
         // Enemy starts with less health
         healthSystem = new HealthSystem(startingHealth);
+
+        healthBar.SetMaxHealth(startingHealth);
+
     }
 
     public void AttackPlayer(Player player)
@@ -40,6 +46,8 @@ public class Enemy : MonoBehaviour
     public void TakeHit(int damage)
     {
         healthSystem.TakeDamage(damage);
+        healthBar.SetHealth(healthSystem.GetHealth());
+
 
         if (healthSystem.IsDead())
         {
