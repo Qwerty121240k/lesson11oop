@@ -6701,7 +6701,7 @@ MonoBehaviour:
   healthSystem:
     maxHealth: 0
     currentHealth: 0
-  startingHealth: 200
+  startingHealth: 10
   contactDamage: 10
   hitCooldown: 1
   healthBar: {fileID: 207507914}
