@@ -1,33 +1,22 @@
 ﻿using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerH : MonoBehaviour
 {
-    [SerializeField] private HealthSystem healthSystem; // ?? This will now be visible
-    public int contactDamage = 10;
-    public float hitCooldown = 1f;
-    public int startingHealth = 100;
+    private HealthSystem healthSystem;
+
+    [SerializeField] private int startingHealth = 100;
+    [SerializeField] private int contactDamage = 20;
     [SerializeField] private HealthBar healthBar;  // 👈 Reference to the UI health bar
 
     void Start()
     {
-        // Create a new HealthSystem for the player
+        // Initialize health system
         healthSystem = new HealthSystem(startingHealth);
         healthBar.SetMaxHealth(startingHealth);
     }
 
-    void Update()
-    {
-
-        if (healthSystem.IsDead())
-        {
-            Debug.Log("Player is dead!");
-        }
-    }
-
-    // Detect when Player hits another collider
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Check if we hit an enemy
         Enemy enemy = collision.GetComponent<Enemy>();
         if (enemy != null)
         {
@@ -43,14 +32,7 @@ public class Player : MonoBehaviour
 
         if (healthSystem.IsDead())
         {
-            Debug.Log("Player died!");
+            Debug.Log("Player has died!");
         }
-    }
-
-    public void Heal(int damage)
-    {
-        healthSystem.Heal(damage);
-        healthBar.SetHealth(healthSystem.GetHealth());
-
     }
 }
