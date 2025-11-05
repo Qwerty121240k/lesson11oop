@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -20,6 +21,17 @@ public class PlayerMovement : MonoBehaviour
     private GameManager gameManager; // Reference to the Game Manager script
     public bool deathState = false; // Set default death state to false
 
+    //Add these variables to your player script
+    private bool isFalling = false;
+    private float fallStartTime = 0.5f;
+    private float fallThreshold = 2.0f; // Adjust this value to set the fall time threshold.
+
+    // The name of the next scene to load
+    public string loadSceneName;
+    // Add this code to your player script
+    public DisplayMessage displayMessage;
+
+    public string showMessage;
 
 
     void Start()
@@ -61,6 +73,42 @@ public class PlayerMovement : MonoBehaviour
                 canDoubleJump = false; // Use up double jump
             }
         }
+
+        // Add this code to your update() script
+        // Check if the player is falling
+        if (IsFalling())
+        {
+            // The player is falling, start timing the fall.
+            if (!isFalling)
+            {
+                isFalling = true;
+                fallStartTime = Time.time;
+            }
+            // Check if the fall duration has exceeded the threshold
+            if (Time.time - fallStartTime >= fallThreshold)
+            {
+                deathState = true;
+            }
+        }
+        else
+        {
+            // The player is not falling, reset the fall timer.
+            isFalling = false;
+        }
+    
+        if (deathState == true)
+        {
+            // display win message
+            displayMessage.ShowMessage(showMessage);
+            // Delay for visual effect (optional)
+            Invoke("LoadLevel", 2f);
+    }
+
+}
+
+    private void LoadLevel()
+    {
+        SceneManager.LoadScene(loadSceneName);
     }
 
     void FixedUpdate()
@@ -116,4 +164,17 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
+
+    //lesion 13 fall 
+
+    //Add this method to the player script
+    bool IsFalling()
+    {
+        // You can implement your own logic here to determine if the player is falling.
+        // For example, you can check if the player's vertical velocity is negative.
+        return GetComponent<Rigidbody2D>().velocity.y < 0;
+    }
+
+
+
 }
